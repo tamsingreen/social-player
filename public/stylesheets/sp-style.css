@@ -1,0 +1,52 @@
+body {
+  padding: 50px 50px 0 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.container {
+  	width: 600px;
+  	margin: 0 auto;
+}
+
+.loading {
+	text-align: center;
+	padding: 8px;
+}
+
+#loading-message {
+	padding: 8px;
+}
+
+.programme {
+	background-color: #F5A9A9;
+	height: 140px;
+}
+
+.programme-image {
+	width: 30%;
+	min-height: 108px;
+	float: left;
+	background-color: #F5A9A9;
+}
+
+.programme-image img{
+	margin: 12px;
+}
+
+.programme-metadata {
+	min-height: 108px;
+	overflow: hidden;
+	background-color: #F5A9A9;
+	padding-right: 12px;
+}
+
+
