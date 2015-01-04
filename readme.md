@@ -29,6 +29,6 @@ use social-player
 ```
 
 ## Run
-Run the programme from [http://localhost:3000](localhost:3000)
+Run the programme from [http://localhost:3000](http://localhost:3000)
 
 On clicking the 'Find programmes' button the app will connect to your Facebook account. This app is not approved by Facebook but user data is not saved.
