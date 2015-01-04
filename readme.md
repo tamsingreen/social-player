@@ -2,25 +2,30 @@
 View available BBC iPlayer programmes based on your Facebook likes 
 
 ## Install Node:
-```npm install
+```
+npm install
 ```
 
 ## Start the server:
-```npm start
+```
+npm start
 ```
 
 ##Connect database:
 In a new terminal window, run:
 
-```mongod --dbpath /Users/yourusername/yourpathto/.../social-player/data
+```
+mongod --dbpath /Users/yourusername/yourpathto/.../social-player/data
 ```
 
 And in another terminal window, run:
 
-```mongo
+```
+mongo
 ```
 
-```use social-player
+```
+use social-player
 ```
 
 ## Run
