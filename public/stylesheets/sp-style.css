@@ -1,6 +1,11 @@
 body {
   padding: 50px 50px 0 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-size: 1.2em;
+}
+
+h3, h4, p {
+	margin: 8px 0px 8px 0px;
 }
 
 a {
@@ -8,8 +13,22 @@ a {
 	color: black;
 }
 
-a:hover {
-	text-decoration: underline;
+.centre-align {
+	text-align: center;
+}
+
+#login-button {
+	background-color: #3B5999;
+	background-image:url('../images/FB-f-Logo__blue_50.png');
+	background-repeat: no-repeat;
+	background-position: 4px 4px;
+	border: 1px solid #052569;
+	border-radius: 5px;
+	height: 60px;
+	width: 350px;
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-size: 1em;
+	color: white;
 }
 
 .container {
@@ -20,22 +39,33 @@ a:hover {
 .loading {
 	text-align: center;
 	padding: 8px;
+	display: none;
 }
 
 #loading-message {
 	padding: 8px;
 }
 
+.programme-master {
+	display:none;
+}
+
 .programme {
 	background-color: #F5A9A9;
-	height: 140px;
+	min-height: 140px;
+	margin-bottom: 8px;
+	overflow: auto;
+	width: 100%;
+}
+
+.programme:hover {
+	background-color:#8A4988;
 }
 
 .programme-image {
-	width: 30%;
+	width: 174px;
 	min-height: 108px;
 	float: left;
-	background-color: #F5A9A9;
 }
 
 .programme-image img{
@@ -45,7 +75,6 @@ a:hover {
 .programme-metadata {
 	min-height: 108px;
 	overflow: hidden;
-	background-color: #F5A9A9;
 	padding-right: 12px;
 }
 

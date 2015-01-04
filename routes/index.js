@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Social Player' });
+  res.render('index', { title: 'Social Player'});
 });
 
 //takes a Facebook programme id and returns a BBC brand pid if a match is found
