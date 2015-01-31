@@ -29,6 +29,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Make Facebook App ID config var from Heroku available
+app.locals.fbAppId = process.env.FACEBOOK_APP_ID;
+
 //Make db accessible to router
 app.use(function(req, res, next) {
     req.db = db;

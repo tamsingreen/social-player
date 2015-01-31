@@ -2,9 +2,14 @@ extends layout
 
 block content
     script.
+        var appId = "#{fbAppId}";
+        if (!appId) {
+            appId = '1577458905824228';
+        } 
+
         window.fbAsyncInit = function() {
             FB.init({
-                appId       : '1560227167547402',
+                appId       : appId,
                 xfbml       : true,
                 version     : 'v2.1'
             });
