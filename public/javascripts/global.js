@@ -6,31 +6,49 @@ var bbcResults = [];
 function facebookLogin() {
     FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-            $('#login').toggle();
-            $('.loading').toggle();
+            $('#login').show();
+            $('.loading').show();
             listLikes(response.authResponse.userID);
         } else {
             FB.login(function(response) {
-                $('#login').toggle();
-                $('.loading').toggle();
-                listLikes(response.authResponse.userID);
+                if (response.status === 'connected') {                
+                    $('#login').show();
+                    $('.loading').show();
+                    listLikes(response.authResponse.userID);
+                } else {
+                    $('.loading').show();
+                    $('#loading-message').text('Social Player needs permission to view your Facebook likes in order to find programmes to watch. Click the Find Programmes button to try again.');
+                    $('#spinner').hide();
+                }
             }, {scope: 'user_likes'});
         }
     });
-    //TODO: Handle login errors
 }
 
-//Request a list of the user's Facebook likes and pass them to collateLikes()
+//Check we have been granted permission to access user_likes, then request them
 function listLikes(fbUserID) {
-    var uri = '/' + fbUserID + '/likes';
-    $('#loading-message').text('Retrieving your likes from Facebook');
-    FB.api(uri, collateLikes);
+    FB.api('/' + fbUserID + '/permissions', function(response) {
+        var permissionGranted = false;
+        for (var i = 0; i < response.data.length; i++) {
+            console.log(response.data[i].permission + ', ' + response.data[i].status);
+            if (response.data[i].permission === 'user_likes' && response.data[i].status === 'granted') {
+                permissionGranted = true;
+                $('#loading-message').text('Retrieving your likes from Facebook');
+                FB.api('/' + fbUserID + '/likes', collateLikes);
+            }
+        }
+        if (!permissionGranted) {
+            $('#loading-message').text('It looks like we don\'t have your permission to access your Facebook likes. If you\'d like to try again, please login again and grant all requested permissions.');
+        }
+    });
 }
 
 //Page through Facebook likes and collate in fbLikes array
 function collateLikes(response) {   
-    for (element in response.data) {
-        fbLikes.push(response.data[element]);        
+    console.log('collateLikes');
+    console.log(response);
+    for (var i = 0; i < response.data.length; i++) {
+        fbLikes.push(response.data[i]);        
     }
     if (response.paging.next) {
         $.get(response.paging.next, collateLikes, 'json');
@@ -38,8 +56,6 @@ function collateLikes(response) {
         //when complete
         searchCategories('Tv show');
     }
-    console.log(fbLikes);
-    console.log(categoryLikes);
 }
 
 //Search the user's fbLikes for all matching the specified category (usually 'Tv show')
@@ -51,11 +67,12 @@ function searchCategories(category) {
         }
     }
     if (categoryLikes.length === 0) {
-        $('#spinner').toggle();
+        $('#spinner').hide();
         $('#loading-message').text('No TV programmes were found in your Facebook likes.');
     } else {
         searchBBCProgrammes(function() {
-            $('.loading').toggle();
+            $('.loading').hide();
+            $('#login-button').hide();
         });
     }
 }
@@ -75,11 +92,10 @@ function searchBBCProgrammes(callback) {
         });
     }
     $(document).ajaxStop(function() {
-        console.log('ajaxStop triggered');
         if (matchingProgrammesFound > 0) {
             callback();
         } else {
-            $('#spinner').toggle();
+            $('#spinner').hide();
             $('#loading-message').text('No iPlayer programmes matching your likes could be found.');
             //TODO: suggest some Facebook pages to like or iPlayer programmes to watch?
         }
