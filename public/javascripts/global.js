@@ -28,6 +28,7 @@ function facebookLogin() {
 //Check we have been granted permission to access user_likes, then request them
 function listLikes(fbUserID) {
     FB.api('/' + fbUserID + '/permissions', function(response) {
+        console.log(response);
         var permissionGranted = false;
         for (var i = 0; i < response.data.length; i++) {
             console.log(response.data[i].permission + ', ' + response.data[i].status);

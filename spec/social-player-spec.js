@@ -108,7 +108,7 @@ describe('Social Player', function() {
 
       FB.api.and.callFake(function (url, cb) {
         console.log('url: ' + url);
-        if (url.indexOf('permissions')) {
+        if (url.indexOf('permissions') !== -1) {
           cb({
             data: [{
                 permission: 'public_profile',
@@ -118,7 +118,7 @@ describe('Social Player', function() {
                 status: 'granted'
               }]
             });
-        } else if (url.indexOf('likes')) {
+        } else if (url.indexOf('likes') !== -1) {
           cb({
             data : [ { category: 'Tv show', id: '123' } ],
             paging: { next: false }
@@ -128,7 +128,7 @@ describe('Social Player', function() {
 
       listLikes(123);
 
-      expect(window.FB.api).toHaveBeenCalledWith('/123/permissions'); 
+      expect(window.FB.api).toHaveBeenCalledWith('/123/permissions', jasmine.any(Function)); 
       expect($('#loading-message').text()).toEqual('Retrieving your likes from Facebook'); 
     });
 

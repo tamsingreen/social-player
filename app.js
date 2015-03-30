@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 //Database
 var mongo = require('mongoskin');
-if (process.env.MONGO) {
+if (process.env.MONGOLAB_URI) {
     var db = mongo.db(process.env.MONGO, {native_parser:true});
 } else {
     var db = mongo.db("mongodb://localhost:27017/social-player", {native_parser:true});
