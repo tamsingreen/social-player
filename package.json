@@ -13,7 +13,7 @@
     "morgan": "~1.3.0",
     "debug": "~2.0.0",
     "jade": "~1.6.0",
-    "mongodb": "*",
-    "mongoskin": "*"
+    "mongodb": "~1.4",
+    "mongoskin": "~1.4.13"
   }
 }
