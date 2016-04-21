@@ -53,7 +53,7 @@ function collateLikes(response) {
         $.get(response.paging.next, collateLikes, 'json');
     } else {
         //when complete
-        searchCategories('Tv Show');
+        searchCategories('Tv show');
     }
 }
 
