@@ -1,5 +1,5 @@
 #Social Player
-View available BBC iPlayer programmes based on your Facebook likes 
+View available BBC iPlayer programmes based on your Facebook likes
 
 ## Install Node dependencies:
 ```
@@ -15,7 +15,7 @@ npm start
 In a new terminal window, run:
 
 ```
-mongod --dbpath /Users/yourusername/yourpathto/.../social-player/data
+mongod --dbpath /path/to/your/data
 ```
 
 ##Import JSON seed data
@@ -23,16 +23,6 @@ In another teminal window, run:
 
 ```
 mongoimport -d social-player -c programmelist --file data/programmes.json
-```
-
-And then run:
-
-```
-mongo
-```
-
-```
-use social-player
 ```
 
 ## Run

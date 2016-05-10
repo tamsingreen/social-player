@@ -11,7 +11,7 @@ function facebookLogin() {
             listLikes(response.authResponse.userID);
         } else {
             FB.login(function(response) {
-                if (response.status === 'connected') {                
+                if (response.status === 'connected') {
                     $('#login').show();
                     $('.loading').show();
                     listLikes(response.authResponse.userID);
@@ -45,11 +45,9 @@ function listLikes(fbUserID) {
 }
 
 //Page through Facebook likes and collate in fbLikes array
-function collateLikes(response) {   
-    console.log('collateLikes');
-    console.log(response);
+function collateLikes(response) {
     for (var i = 0; i < response.data.length; i++) {
-        fbLikes.push(response.data[i]);        
+        fbLikes.push(response.data[i]);
     }
     if (response.paging.next) {
         $.get(response.paging.next, collateLikes, 'json');
@@ -63,7 +61,7 @@ function collateLikes(response) {
 function searchCategories(category) {
     $('#loading-message').text('Searching for your favourite TV shows');
     for (var i = 0; i < fbLikes.length; i++) {
-        if (fbLikes[i].category === category) {
+        if (fbLikes[i].category.toUpperCase === category.toUpperCase) {
             categoryLikes.push(fbLikes[i]);
         }
     }
@@ -101,13 +99,13 @@ function searchBBCProgrammes(callback) {
             //TODO: suggest some Facebook pages to like or iPlayer programmes to watch?
         }
     });
-} 
+}
 
 function displayProgrammeMetadata(bbcBrandPid) {
     var programme = $('.programme-master').html();
     $.get('http://www.bbc.co.uk/programmes/' + bbcBrandPid + '/episodes/player.json')
         .done(function(data) {
-            for (var i = 0; i < data.episodes.length; i++) {       
+            for (var i = 0; i < data.episodes.length; i++) {
                 $('#programme-container').append(programme);
                 $('.programme').last().wrap("<a href='http://www.bbc.co.uk/programmes/" + data.episodes[i].programme.pid + "'></a>");
                 $('.programme-image').last().html('<img src="http://ichef.bbci.co.uk/images/ic/150x84/' + data.episodes[i].programme.image.pid + '.jpg">');
