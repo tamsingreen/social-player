@@ -5,50 +5,22 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// Config
-var config = require('./config');
-
 var routes = require('./routes/index');
-
-var app = express();
-
 // Database
 var dbClient = require('./dbClient');
 var db;
-dbClient.connect(config.mongoURI[app.settings.env], function(err) {
+
+
+var app = express();
+
+dbClient.connect(app.settings.env, function(err) {
   if (err) {
-    console.log("Error connecting to db");
+    console.log('Error connecting to db: ' + err);
   } else {
-    console.log('Connected to db');
+    console.log('Connected to MongoDB');
     db = dbClient.getDB();
   }
-})
-// var MongoClient = require('mongodb').MongoClient;
-// var db;
-// // Use connect method to connect to the server
-// MongoClient.connect(config.mongoURI[app.settings.env], function(err, db) {
-//   if (!err) {
-//     console.log("Connected successfully to server");
-//     db = db;
-//     // db.collection('programmelist').insert(
-//     //   [{ "fbId" : "260212261199", "fbCategory" : "Tv show", "fbName" : "BBC Newsnight", "bbcBrandPid" : "b006mk25" },
-//     //   { "fbId" : "144513172354395", "fbCategory" : "Tv show", "fbName" : "The Fall (TV series)", "bbcBrandPid" : "p0295tcf" },
-//     //   { "fbId" : "169383494938", "fbCategory" : "Tv show", "fbName" : "BBC Eastenders", "bbcBrandPid" : "b006m86d" }]
-//     // );
-//   } else {
-//     console.log("Could not connect to server");
-//   }
-// });
-
-// var mongoose = mongo.connect(config.mongoURI[app.settings.env]);
-// var db = mongoose.connection;
-//   db.on('error', console.error.bind(console, 'connection error:'));
-//   db.once('open', function() {
-//     // we're connected!
-//     console.log('Connected to Mongo DB URI: ' + config.mongoURI[app.settings.env]);
-//     console.log(db.getName());
-// });
-
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -67,10 +39,8 @@ app.locals.fbAppId = process.env.FACEBOOK_APP_ID;
 
 //Make db accessible to router
 app.use(function(req, res, next) {
-    if (db) {
-      req.db = db;
-      console.log('Retrieved db');
-    } else console.log('Could not retrieve db');
+    if (db) req.db = db;
+    else console.log('Could not retrieve db');
     next();
 });
 
@@ -109,4 +79,3 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-// module.exports.db = db;

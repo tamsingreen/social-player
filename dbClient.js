@@ -1,25 +1,40 @@
-var MongoClient = require('mongodb').MongoClient,
-  async = require('async');
-  // config = require('./config');
+var MongoClient = require('mongodb').MongoClient;
+var async = require('async');
+const events = require('events');
+
+var config = require('./config');
 
 var state = {
   db: null,
   mode: null,
 }
 
-exports.connect = function(uri, done) {
-  if (state.db) return done();
+var database = new events.EventEmitter();
+exports.database = database;
 
-  MongoClient.connect(uri, function(err, db) {
-    if (err) return done(err);
-    state.db = db;
-    state.mode = app.settings.env;
+exports.connect = function(env, done) {
+  if (state.db) {
     done();
-  });
+  } else {
+    MongoClient.connect(config.mongoURI[env], function(err, db) {
+      if (err) {
+        done(err);
+      } else {
+        state.db = db;
+        state.mode = env;
+        database.emit('connected');
+        done();
+      }
+    });
+  }
 }
 
 exports.getDB = function() {
-  return state.db;
+  if (state.db) {
+    return state.db;
+  } else {
+    console.log('Database has not been initialized.');
+  }
 }
 
 exports.drop = function(done) {
