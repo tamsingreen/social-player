@@ -1,15 +1,14 @@
-var MongoClient = require('mongodb').MongoClient;
-var async = require('async');
-const events = require('events');
-
-var config = require('./config');
+var MongoClient = require('mongodb').MongoClient,
+    async = require('async'),
+    events = require('events'),
+    config = require('./config'),
+    database = new events.EventEmitter();
 
 var state = {
   db: null,
   mode: null,
 }
 
-var database = new events.EventEmitter();
 exports.database = database;
 
 exports.connect = function(env, done) {

@@ -1,11 +1,11 @@
 process.env.NODE_ENV = 'test';
 
-var chai = require('chai')
-chaiHttp = require('chai-http'),
-app = require('../app.js'),
-dbClient = require('../dbClient.js'),
-should = chai.should();
-var db;
+var chai = require('chai'),
+    chaiHttp = require('chai-http'),
+    app = require('../app.js'),
+    dbClient = require('../dbClient.js'),
+    should = chai.should(),
+    db;
 
 chai.use(chaiHttp);
 

@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var async = require('async');
+var express = require('express'),
+		router = express.Router(),
+		async = require('async');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -22,9 +22,8 @@ router.post('/programmes/', function(req, res) {
 		case 'valid JSON':
 			async.each(fbIds, function(fbId, callback) {
 				db.collection('programmelist').findOne(fbId, function(err, result) {
-						if (err) {
-							callback(err);
-						} else if (result != null) {
+						if (err) callback(err);
+						if (result != null) {
 							matchingProgrammes.push({'bbcBrandPid' : result.bbcBrandPid});
 						} callback();
 					});
