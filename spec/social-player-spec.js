@@ -23,7 +23,7 @@ describe('Social Player', function() {
           authResponse: { userID: '12345'}
         });
       });
-      
+
       facebookLogin();
 
       expect(window.listLikes).toHaveBeenCalledWith('12345');
@@ -37,7 +37,7 @@ describe('Social Player', function() {
           status: 'unknown'
         });
       });
-      
+
       FB.login.and.callFake(function (callback) {
         callback({
           status: 'connected',
@@ -107,7 +107,29 @@ describe('Social Player', function() {
       setFixtures(sandbox({id: 'loading-message'}));
 
       FB.api.and.callFake(function (url, cb) {
-        console.log('url: ' + url);
+        if (url.indexOf('permissions') !== -1) {
+          cb({
+            data: [{
+                permission: 'public_profile',
+                status: 'granted'
+              }, {
+                permission: 'user_likes',
+                status: 'granted'
+              }]
+            });
+        }
+      });
+
+      listLikes(123);
+
+      expect(window.FB.api).toHaveBeenCalledWith('/123/permissions', jasmine.any(Function));
+      expect($('#loading-message').text()).toEqual('Retrieving your likes from Facebook');
+    });
+
+    it('should call displayProgrammeMetadata with a bbc PID', function () {
+      spyOn(window, 'displayProgrammeMetadata');
+
+      FB.api.and.callFake(function (url, cb) {
         if (url.indexOf('permissions') !== -1) {
           cb({
             data: [{
@@ -124,22 +146,6 @@ describe('Social Player', function() {
             paging: { next: false }
           });
         }
-      });
-
-      listLikes(123);
-
-      expect(window.FB.api).toHaveBeenCalledWith('/123/permissions', jasmine.any(Function)); 
-      expect($('#loading-message').text()).toEqual('Retrieving your likes from Facebook'); 
-    });
-
-    it('should call displayProgrammeMetadata with a bbc PID', function () {
-      spyOn(window, 'displayProgrammeMetadata');
-
-      FB.api.and.callFake(function (url, cb) {
-        cb({
-          data : [ { category: 'Tv show', id: '123' } ],
-          paging: { next: false }
-        });
       });
 
       jasmine.Ajax.stubRequest('/programmes/123').andReturn({
@@ -160,10 +166,22 @@ describe('Social Player', function() {
       spyOn(window, 'displayProgrammeMetadata');
 
       FB.api.and.callFake(function (url, cb) {
-        cb({
-          data : [ { category: 'Tv show', id: '789' } ],
-          paging: { next: false }
-        });
+        if (url.indexOf('permissions') !== -1) {
+          cb({
+            data: [{
+                permission: 'public_profile',
+                status: 'granted'
+              }, {
+                permission: 'user_likes',
+                status: 'granted'
+              }]
+            });
+        } else if (url.indexOf('likes') !== -1) {
+          cb({
+            data : [ { category: 'Tv show', id: '789' } ],
+            paging: { next: false }
+          });
+        }
       });
 
       jasmine.Ajax.stubRequest('/programmes/789').andReturn({
@@ -173,7 +191,7 @@ describe('Social Player', function() {
       });
 
       listLikes(123);
-      
+
       jQuery.event.trigger( "ajaxStop" );
 
       expect($('#loading-message').text()).toEqual('No iPlayer programmes matching your likes could be found.');
@@ -183,12 +201,24 @@ describe('Social Player', function() {
       setFixtures(sandbox({id: 'loading-message'}));
 
       spyOn(window, 'displayProgrammeMetadata');
-      
+
       FB.api.and.callFake(function (url, cb) {
-        cb({
-          data : [ { category: 'Musician/band', id: '789' } ],
-          paging: { next: false }
-        });
+        if (url.indexOf('permissions') !== -1) {
+          cb({
+            data: [{
+                permission: 'public_profile',
+                status: 'granted'
+              }, {
+                permission: 'user_likes',
+                status: 'granted'
+              }]
+            });
+        } else if (url.indexOf('likes') !== -1) {
+          cb({
+            data : [ { category: 'Musician/band', id: '789' } ],
+            paging: { next: false }
+          });
+        }
       });
 
       listLikes(123);
