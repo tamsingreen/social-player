@@ -1,6 +1,7 @@
 var fbLikes = [];
 var categoryLikes = [];
 var bbcResults = [];
+//TODO get rid of globals
 
 //Login in to user's Facebook, requesting the 'user_likes' scope if not already granted
 function facebookLogin() {
@@ -28,13 +29,12 @@ function facebookLogin() {
 //Check we have been granted permission to access user_likes, then request them
 function listLikes(fbUserID) {
     FB.api('/' + fbUserID + '/permissions', function(response) {
-        console.log(response);
         var permissionGranted = false;
         for (var i = 0; i < response.data.length; i++) {
-            console.log(response.data[i].permission + ', ' + response.data[i].status);
             if (response.data[i].permission === 'user_likes' && response.data[i].status === 'granted') {
                 permissionGranted = true;
                 $('#loading-message').text('Retrieving your likes from Facebook');
+                fbLikes = []; //reset before we call collateLikes
                 FB.api('/' + fbUserID + '/likes', collateLikes);
             }
         }
@@ -45,6 +45,7 @@ function listLikes(fbUserID) {
 }
 
 //Page through Facebook likes and collate in fbLikes array
+//TODO: combine with searchCategories to only collate Tv shows (or other type specified by param?)
 function collateLikes(response) {
     for (var i = 0; i < response.data.length; i++) {
         fbLikes.push(response.data[i]);
@@ -53,6 +54,7 @@ function collateLikes(response) {
         $.get(response.paging.next, collateLikes, 'json');
     } else {
         //when complete
+        categoryLikes = []; //reset before we call searchCategories
         searchCategories('Tv show');
     }
 }
@@ -61,7 +63,7 @@ function collateLikes(response) {
 function searchCategories(category) {
     $('#loading-message').text('Searching for your favourite TV shows');
     for (var i = 0; i < fbLikes.length; i++) {
-        if (fbLikes[i].category.toUpperCase === category.toUpperCase) {
+        if (fbLikes[i].category.toUpperCase() === category.toUpperCase()) {
             categoryLikes.push(fbLikes[i]);
         }
     }
@@ -69,10 +71,11 @@ function searchCategories(category) {
         $('#spinner').hide();
         $('#loading-message').text('No TV programmes were found in your Facebook likes.');
     } else {
-        searchBBCProgrammes(function() {
-            $('.loading').hide();
-            $('#login-button').hide();
-        });
+      bbcResults = []; //reset before we call searchBBCProgrammes
+      searchBBCProgrammes(function() {
+          $('.loading').hide();
+          $('#login-button').hide();
+      });
     }
 }
 
