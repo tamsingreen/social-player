@@ -1,2 +1,4 @@
 node_modules/
 data/
+todo
+public/javascripts/jquery.js

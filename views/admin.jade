@@ -1,0 +1,48 @@
+extends layout
+
+block content
+  div.container
+    h1= title
+    p Welcome to our test
+
+    // Wrapper
+    #wrapper
+
+        // PROGRAMME LIST
+        h2 Programme List
+        #programmeList
+            table
+                thead
+                    th Facebook ID
+                    th Facebook Name
+                    th Facebook Category
+                    th BBC Brand PID
+                tbody
+                    each entry in data
+                        tr
+                          td= entry.fbId
+                          td: a(href='http://www.facebook.com/#{entry.fbId}') #{entry.fbName}
+                          td= entry.fbCategory
+                          td: a(href='http://www.bbc.co.uk/programmes/#{entry.bbcBrandPid}') #{entry.bbcBrandPid}
+                      
+        // /PROGRAMME LIST
+
+        // ADD PROGRAMME
+        h2 Add Programme
+        #addProgramme
+            form#programmeForm
+                fieldset
+                    input#inputFbPageUrl(type='text', placeholder='Facebook Page URL')
+                    br
+                    input#inputFbId(type='text', placeholder='Facebook Page ID' required)
+                    input#inputFbName(type='text', placeholder='Facebook Page Name' required)
+                    br
+                    input#inputBbcProgrammeUrl(type='text', placeholder='BBC Programme URL')
+                    br
+                    input#inputBbcPid(type='text', placeholder='BBC PID' required)
+                    br
+                    input#btnAddProgramme(type='submit' value='Add Programme')
+        // /ADD PROGRAMME
+
+    // /WRAPPER
+  script(src='/javascripts/admin.js')

@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test';
 var chai = require('chai'),
     chaiHttp = require('chai-http'),
     app = require('../app.js'),
-    dbClient = require('../dbClient.js'),
+    dbClient = require('../lib/dbClient.js'),
     should = chai.should(),
     db;
 
@@ -33,42 +33,42 @@ describe('POST /programmes', function() {
   it('should return a JSON array of matching results', function(done) {
     chai.request(app)
       .post('/programmes')
-      .send([{ fbId: '260212261199'}, {fbId: '169383494938' }])
+      .send({ fbIds: ['260212261199', '169383494938']})
       .end(function(err, res) {
+        console.log('body', res.body);
         res.should.have.status(200);
         res.should.be.JSON;
-        res.body.should.be.a('array');
-        res.body[0].should.have.property('bbcBrandPid');
-        res.body[0].bbcBrandPid.should.equal('b006mk25');
-        res.body[1].should.have.property('bbcBrandPid');
-        res.body[1].bbcBrandPid.should.equal('b006m86d');
+        res.body.bbcBrandPids.should.be.a('array');
+        res.body.bbcBrandPids[0].should.equal('b006mk25');
+        res.body.bbcBrandPids[1].should.equal('b006m86d');
         done();
       });
   });
   it('should return an empty array when no results match', function(done) {
     chai.request(app)
       .post('/programmes')
-      .send([{ fbId: '123'}, {fbId: '456' }])
+      .send({fbIds: ['123', '456']})
       .end(function(err, res) {
         res.should.have.status(200);
         res.should.be.JSON;
-        res.body.should.be.a('array');
-        res.body.length.should.equal(0);
+        res.body.bbcBrandPids.should.be.a('array');
+        res.body.bbcBrandPids.length.should.equal(0);
         done();
       });
   });
   it('should return an empty array when an empty array is sent', function(done) {
     chai.request(app)
       .post('/programmes')
-      .send([])
+      .send({fbIds: []})
       .end(function(err, res) {
         res.should.have.status(200);
         res.should.be.JSON;
-        res.body.should.be.a('array');
-        res.body.length.should.equal(0);
+        res.body.bbcBrandPids.should.be.a('array');
+        res.body.bbcBrandPids.length.should.equal(0);
         done();
       });
   });
+  //sort out what the request schema is
   it('should return a 400 if the request does not match the request schema', function(done) {
     chai.request(app)
       .post('/programmes')
@@ -96,7 +96,7 @@ var populateDatabase = function(done) {
     { "fbId" : "169383494938", "fbCategory" : "Tv show", "fbName" : "BBC Eastenders", "bbcBrandPid" : "b006m86d" }]
     , function(err, res) {
       if (err) {
-        console.log('failed to insert: ' + err);
+        console.log('Failed to insert test data: ' + err);
       }
       done();
     }

@@ -7,7 +7,7 @@ var express = require('express'),
     routes = require('./routes/index');
 
 // Database
-var dbClient = require('./dbClient');
+var dbClient = require('./lib/dbClient');
 var db;
 
 var app = express();
@@ -16,7 +16,7 @@ dbClient.connect(app.settings.env, function(err) {
   if (err) {
     console.log('Error connecting to db: ' + err);
   } else {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB on ' + dbClient.getMode());
     db = dbClient.getDB();
   }
 });
