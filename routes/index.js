@@ -6,6 +6,16 @@ router.get('/', function(req, res) {
 	res.render('index', { title: 'Social Player'});
 });
 
+router.put('/programme', function(req, res) {
+	var db = req.db;
+	var newProgramme = req.body;
+	dao.addProgramme(newProgramme, db, function(result) {
+		if (result.result == 'ok') {
+			res.sendStatus(201);
+		}
+	});
+});
+
 router.post('/programmes/', function(req, res) {
 	var db = req.db;
 	var fbIds = req.body;
@@ -21,7 +31,6 @@ router.post('/programmes/', function(req, res) {
 router.get('/admin', function(req, res) {
 	var db = req.db;
 	dao.getAllProgrammes(db, function(result) {
-		// console.log(result);
 		res.render('admin', { title: 'Social Player - Admin', data: result});
 	});
 });

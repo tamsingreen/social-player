@@ -9,6 +9,46 @@ var chai = require('chai'),
 
 chai.use(chaiHttp);
 
+describe('PUT /programme', function() {
+  beforeEach(function(done) {
+    if (db) {
+      db.collection('programmelist').drop(function() {
+        done();
+      });
+    } else {
+      dbClient.database.once('connected', function() {
+        db = dbClient.getDB();
+        db.collection('programmelist').drop(function() {
+          done();
+        });
+      });
+    }
+  });
+
+  it('should return a 201 for a successful request and the programme should be in the database', function(done) {
+    var newProgramme = {fbId: '123456', fbCategory: 'Tv show', fbName: 'Saturday Night Live', bbcBrandPid: 'a123b45c'};
+    chai.request(app)
+      .put('/programme')
+      .send(newProgramme)
+      .end(function(err, res) {
+        //console.log('body', res.body);
+        res.should.have.status(201);
+        db.collection('programmelist').findOne({'fbId':'123456'}, function(err, result) {
+          result.fbId.should.equal(newProgramme.fbId);
+          result.fbCategory.should.equal(newProgramme.fbCategory);
+          result.fbName.should.equal(newProgramme.fbName);
+          result.bbcBrandPid.should.equal(newProgramme.bbcBrandPid);
+          done();
+        });
+        // done();
+      });
+  });
+
+  it('should return a 400 for an unsuccessful request', function(done) {
+    done();
+  });
+});
+
 describe('POST /programmes', function() {
   beforeEach(function(done) {
     if (db) {
