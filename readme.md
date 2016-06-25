@@ -19,7 +19,7 @@ mongod --dbpath /path/to/your/data
 ```
 
 ##Import JSON seed data
-In another teminal window, run:
+In another terminal window, run:
 
 ```
 mongoimport -d social-player -c programmelist --file data/programmes.json

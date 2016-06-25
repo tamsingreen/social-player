@@ -1,19 +1,28 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express'),
+		router = express.Router(),
+		dao = require('../lib/dao');
 
-/* GET home page. */
 router.get('/', function(req, res) {
 	res.render('index', { title: 'Social Player'});
 });
 
-//takes a Facebook programme id and returns a BBC brand pid if a match is found
-router.get('/programmes/:id', function(req, res) { 
+router.post('/programmes/', function(req, res) {
 	var db = req.db;
-	var fbId = req.params.id;
-	var matchingProgrammes = [];
-	db.collection('programmelist').findOne({fbId: fbId}, function(err, result) {
-		res.json(result);
+	var fbIds = req.body;
+	dao.matchProgrammes(fbIds, db, function(result) {
+		if (result.error) {
+			res.sendStatus(result.error);
+		} else {
+			res.json(result.data);
+		}
 	});
 });
 
+router.get('/admin', function(req, res) {
+	var db = req.db;
+	dao.getAllProgrammes(db, function(result) {
+		// console.log(result);
+		res.render('admin', { title: 'Social Player - Admin', data: result});
+	});
+});
 module.exports = router;

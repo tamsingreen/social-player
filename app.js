@@ -1,21 +1,25 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    routes = require('./routes/index');
 
-//Database
-var mongo = require('mongoskin');
-if (process.env.MONGOLAB_URI) {
-    var db = mongo.db(process.env.MONGOLAB_URI, {native_parser:true});
-} else {
-    var db = mongo.db("mongodb://localhost:27017/social-player", {native_parser:true});
-}
-
-var routes = require('./routes/index');
+// Database
+var dbClient = require('./lib/dbClient');
+var db;
 
 var app = express();
+
+dbClient.connect(app.settings.env, function(err) {
+  if (err) {
+    console.log('Error connecting to db: ' + err);
+  } else {
+    console.log('Connected to MongoDB on ' + dbClient.getMode());
+    db = dbClient.getDB();
+  }
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,7 +38,8 @@ app.locals.fbAppId = process.env.FACEBOOK_APP_ID;
 
 //Make db accessible to router
 app.use(function(req, res, next) {
-    req.db = db;
+    if (db) req.db = db;
+    else console.log('Could not retrieve db');
     next();
 });
 
@@ -70,6 +75,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;
