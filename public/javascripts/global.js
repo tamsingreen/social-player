@@ -106,14 +106,14 @@ function displayProgrammeMetadata(data) {
   for (var i = 0; i < data.episodes.length; i++) {
     $('#programme-container').append(programme);
     $('.programme').last().wrap("<a href='http://www.bbc.co.uk/programmes/" + data.episodes[i].programme.pid + "'></a>");
-    $('.programme-image').last().html('<img src="http://ichef.bbci.co.uk/images/ic/150x84/' + data.episodes[i].programme.image.pid + '.jpg">');
+    $('.programme__image').last().html('<img src="http://ichef.bbci.co.uk/images/ic/150x84/' + data.episodes[i].programme.image.pid + '.jpg">');
     if (data.episodes[i].programme.programme.type === "brand") {
-      $('.programme-title').last().text(data.episodes[i].programme.programme.title);
+      $('.programme__title').last().text(data.episodes[i].programme.programme.title);
     } else {
-      $('.programme-title').last().text(data.episodes[i].programme.programme.programme.title);
+      $('.programme__title').last().text(data.episodes[i].programme.programme.programme.title);
     }
-    $('.programme-episode').last().text(data.episodes[i].programme.title);
-    $('.programme-description').last().text(data.episodes[i].programme.short_synopsis);
-    $('.programme-availability').last().text(data.episodes[i].programme.media.availability);
+    $('.programme__episode').last().text(data.episodes[i].programme.title);
+    $('.programme__description').last().text(data.episodes[i].programme.short_synopsis);
+    $('.programme-days-remaining').last().text(data.episodes[i].programme.media.availability);
   }
 }
