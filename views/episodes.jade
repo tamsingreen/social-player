@@ -1,0 +1,13 @@
+ul 
+  each episode in data.episodes
+    li 
+      div.programme
+        a(href='http://www.bbc.co.uk/programmes/' + episode.programme.pid)
+          div.programme__image
+            img(src='http://ichef.bbci.co.uk/images/ic/150x84/' + episode.programme.image.pid + '.jpg')
+          div.programme__metadata
+            h3.programme__title= episode.programme.programme.title
+            h4.programme__episode= episode.programme.title
+            p.programme__description= episode.programme.short_synopsis
+          div.programme__availability
+            div.programme-days-remaining= episode.programme.media.availability
