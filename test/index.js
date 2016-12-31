@@ -101,6 +101,17 @@ describe('index', () =>{
           done();
         });
     });
+
+    it('does something when the request to iPlayer fails', (done) => {
+      const daoStub = sandbox.stub(dao, 'getiPlayerEpisodes').returns(Promise.reject());
+
+      chai.request(app)
+        .get('/episodes/' + pid)
+        .end((err, res) => {
+          res.should.have.status(500);
+          done();
+        });
+    });
   });
 
 });
