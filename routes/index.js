@@ -1,28 +1,40 @@
-var express = require('express'),
-		router = express.Router(),
-		dao = require('../lib/dao');
+const express = require('express'),
+			async = require('async'),
+			router = express.Router(),
+			dao = require('../lib/dao');
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
 	res.render('index', { title: 'Social Player'});
 });
 
-router.post('/programmes/', function(req, res) {
-	var db = req.db;
-	var fbIds = req.body;
-	dao.matchProgrammes(fbIds, db, function(result) {
-		if (result.error) {
-			res.sendStatus(result.error);
-		} else {
-			res.json(result.data);
-		}
-	});
+router.get('/episodes/:pid', (req, res) => {
+	const pid = req.params.pid;
+	dao.getiPlayerEpisodes(pid)
+		.then((episodeData) => {
+			res.render('episodes', {data: episodeData, layout: false});
+		})
+		.catch(() => {
+			res.sendStatus(500);
+		});
 });
 
-router.get('/admin', function(req, res) {
-	var db = req.db;
-	dao.getAllProgrammes(db, function(result) {
-		// console.log(result);
+router.post('/programmes/', (req, res) => {
+	const db = req.db;
+	const fbIds = req.body;
+	dao.matchProgrammes(fbIds, db)
+		.then((result) => {
+			res.json(result);
+		})
+		.catch((error) => {
+			res.sendStatus(500);
+		});
+});
+
+router.get('/admin', (req, res) => {
+	const db = req.db;
+	dao.getAllProgrammes(db, (result) => {
 		res.render('admin', { title: 'Social Player - Admin', data: result});
 	});
 });
+
 module.exports = router;
